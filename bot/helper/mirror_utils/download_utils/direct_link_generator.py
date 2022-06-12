@@ -382,3 +382,30 @@ def gdtot(url: str) -> str:
     except:
         raise DirectDownloadLinkException("ERROR: Try in your broswer, mostly file not found or user limit exceeded!")
     return f'https://drive.google.com/open?id={decoded_id}'
+
+
+def mdis_k(urlx):
+    scraper = create_scraper(interpreter="nodejs", allow_brotli=False)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"
+    }
+    apix = f"http://x.egraph.workers.dev/?param={urlx}"
+    try:
+        response = scraper.get(apix, headers=headers)
+        query = response.json()
+    except:
+        raise DirectDownloadLinkException("ERROR: Error while trying to generate Direct Link from MDisk!")
+    return query
+ 
+def mdisk(url: str) -> str:
+    """MDisk DDL link generator
+    By https://github.com/prono69"""
+ 
+    try:
+        fxl = url.split("/")
+        urlx = fxl[-1]
+        uhh = mdis_k(urlx)
+        text = uhh["download"]
+        return text
+    except:
+        raise DirectDownloadLinkException("ERROR: Error while trying to generate Direct Link from MDisk!")

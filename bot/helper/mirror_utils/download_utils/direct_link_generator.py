@@ -15,8 +15,6 @@ import os
 from urllib.parse import urlparse, unquote
 from json import loads as jsnloads
 from lk21 import Bypass
-try: import cloudscraper
-except: os.system("pip3 install cloudscraper")
 from cfscrape import create_scraper
 from bs4 import BeautifulSoup
 from base64 import standard_b64encode
@@ -25,6 +23,11 @@ from bot import LOGGER, UPTOBOX_TOKEN, CRYPT
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.bot_utils import is_gdtot_link
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
+try:
+  import cloudscraper
+except ModuleNotFoundError:
+  os.system("pip3 install cloudscraper")
+  import cloudscraper
 
 fmed_list = ['fembed.net', 'fembed.com', 'femax20.com', 'fcdn.stream', 'feurl.com', 'layarkacaxxi.icu',
              'naniplay.nanime.in', 'naniplay.nanime.biz', 'naniplay.com', 'mm9842.com']

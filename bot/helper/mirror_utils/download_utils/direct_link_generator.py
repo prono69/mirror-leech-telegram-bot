@@ -14,6 +14,8 @@ from base64 import b64decode
 from urllib.parse import urlparse, unquote
 from json import loads as jsnloads
 from lk21 import Bypass
+try: import cloudscraper
+except: os.system("pip3 install cloudscraper")
 from cfscrape import create_scraper
 from bs4 import BeautifulSoup
 from base64 import standard_b64encode
@@ -68,7 +70,7 @@ def direct_link_generator(link: str):
     elif 'krakenfiles.com' in link:
         return krakenfiles(link)
     elif "mdisk" in link:
-        return mdisk(link)
+        return mdisk_ddl(link)
     elif is_gdtot_link(link):
         return gdtot(link)
     elif any(x in link for x in fmed_list):
@@ -387,27 +389,38 @@ def gdtot(url: str) -> str:
 
 
 def mdis_k(urlx):
-    scraper = create_scraper(interpreter="nodejs", allow_brotli=False)
+    scraper = cloudscraper.create_scraper(interpreter="nodejs", allow_brotli=False)
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"
     }
     apix = f"http://x.egraph.workers.dev/?param={urlx}"
+    time.sleep(3)
     try:
         response = scraper.get(apix, headers=headers)
         query = response.json()
-    except:
-        raise DirectDownloadLinkException("ERROR: Error while trying to generate Direct Link from MDisk!")
+    except BaseException:
+        return "Invalid Link"
     return query
- 
-def mdisk(url: str) -> str:
+
+
+def mdisk_ddl(url: str) -> str:
     """MDisk DDL link generator
-    By https://github.com/prono69"""
- 
-    try:
-        fxl = url.split("/")
-        urlx = fxl[-1]
-        uhh = mdis_k(urlx)
-        text = uhh["download"]
-        return text
-    except:
-        raise DirectDownloadLinkException("ERROR: Error while trying to generate Direct Link from MDisk!")
+    By https://github.com/dishapatel010"""
+
+    check = re_findall(r"\bhttps?://.*mdisk\S+", url)
+    if not check:
+        textx = f"Invalid mdisk url"
+        return textx
+    else:
+        try:
+            fxl = url.split("/")
+            urlx = fxl[-1]
+            uhh = mdis_k(urlx)
+            try:
+                text = uhh["download"]
+            except BaseException:
+                return "Invalid Link"
+            return text
+        except ValueError:
+            textx = f"The content is deleted."
+            return
